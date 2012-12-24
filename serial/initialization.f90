@@ -4,7 +4,7 @@
 module initialization
 
    	implicit none
-   	save  ! might need this to "preserve data values"
+   	save
 
       integer :: i, j, k, irow, icol, ir, ith, iter
 
