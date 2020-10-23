@@ -1,0 +1,5 @@
+*.swp
+*.o
+*.mod
+serial/surya
+parallel/surya
