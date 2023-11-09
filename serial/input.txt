@@ -10,7 +10,7 @@ $domain
 
 $timestepping
    dt=1d8
-   niter=1000
+   niter=1000000
 /
 
 $init
