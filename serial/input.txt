@@ -1,18 +1,18 @@
 $domain
-   rsun = 6.9599d10
-   pi = 3.1415926535897932384626433832795028841972d+0
-   rmin_frac = 0.55d0      ! fractional rmin
-   rmax_frac = 1d0         ! fractional rmax
-   thetamin_frac = 0d0     ! fractional thetamin
-   thetamax_frac = 1d0     ! fractional thetamax
-   n = 4                   ! interior dimension - actual size is (n+2)x(n+2)
+    rsun = 6.9599d10
+    pi = 3.1415926535897932384626433832795028841972d+0
+    rmin_frac = 0.55d0      ! fractional rmin
+    rmax_frac = 1d0         ! fractional rmax
+    thetamin_frac = 0d0     ! fractional thetamin
+    thetamax_frac = 1d0     ! fractional thetamax
+    n = 4                   ! interior dimension - actual size is (n+2)x(n+2)
 /
 
 $timestepping
-   dt=1d8
-   niter=1000000
+    dt=1d8
+    niter=100
 /
 
 $init
-   init_mode='choudhuri'
+    init_mode='choudhuri'
 /
