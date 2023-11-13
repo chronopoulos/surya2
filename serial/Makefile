@@ -7,3 +7,6 @@ all: clean
 
 clean:
 	rm -f *.o *.mod surya
+
+purge:
+	rm -f *.dat
