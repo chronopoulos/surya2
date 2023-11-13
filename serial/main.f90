@@ -28,7 +28,7 @@ program main
         t=t+dt
 
         if (iter/40*40 .eq. iter) then
-            open(95, file='run.dat', status='unknown', access='append')
+            open(95, file=TRIM(ADJUSTL(data_dir))//"/run.dat", status='unknown', access='append')
             write(95, '(6(e15.9,1x))') t, bfield(45,74), bfield(44,74), bfield(45,54), afield(120,122), afield(120,6)
             close(95)
         end if

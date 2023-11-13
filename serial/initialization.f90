@@ -36,6 +36,7 @@ module initialization
         double precision, allocatable :: subdiag(:), diag(:), superdiag(:), rhs(:), result(:)
 
         character(len=32) :: init_mode
+        character(len=512) :: data_dir
 
 contains
 
@@ -45,6 +46,7 @@ contains
         namelist /domain/ rsun, pi, rmin_frac, rmax_frac, thetamin_frac, thetamax_frac, n
         namelist /timestepping/ dt, iter, niter
         namelist /init/ init_mode
+        namelist /output/ data_dir
 
         open(99, file='input.txt', status='old')
 
@@ -62,6 +64,7 @@ contains
         read(99, nml=timestepping)
 
         read(99, nml=init)
+        read(99, nml=output)
 
     end subroutine read_input
 
