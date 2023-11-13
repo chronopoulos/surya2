@@ -35,8 +35,12 @@ module initialization
         ! tridi stuff
         double precision, allocatable :: subdiag(:), diag(:), superdiag(:), rhs(:), result(:)
 
+        ! initialization
         character(len=32) :: init_mode
+
+        ! output
         character(len=512) :: data_dir
+        integer :: output_cadence
 
 contains
 
@@ -46,7 +50,7 @@ contains
         namelist /domain/ rsun, pi, rmin_frac, rmax_frac, thetamin_frac, thetamax_frac, n
         namelist /timestepping/ dt, iter, niter
         namelist /init/ init_mode
-        namelist /output/ data_dir
+        namelist /output/ data_dir, output_cadence
 
         open(99, file='input.txt', status='old')
 
@@ -62,7 +66,6 @@ contains
         dth_mid=(thetamax-thetamin)/(2*n+2)
 
         read(99, nml=timestepping)
-
         read(99, nml=init)
         read(99, nml=output)
 

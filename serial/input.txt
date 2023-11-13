@@ -19,4 +19,5 @@ $init
 
 $output
     data_dir='/home/chrono/data/surya2/serial'
+    output_cadence = 100
 /
