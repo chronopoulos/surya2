@@ -38,19 +38,26 @@ contains
         double precision :: r_p, r_0
         double precision :: rho_top_ish=2d-7   ! this is not what we want, but it will do
         double precision :: dpsi_dr, dpsi_dtheta, rho
+        double precision :: p, q
 
         ! constants
         r_p=0.61*rsun
         r_0=(rsun-rmin)/4
 
         ! streamfunction (mid-point resolution, avoid the boundaries)
+        open(82, file=TRIM(ADJUSTL(data_dir))//"/psi.dat", action='write', status='replace')
         do i=1,2*n+1
             do j=1,2*n+1
                 psi_mid(i,j) = psi_0 * (r_mid(i)-r_p) * dsin( pi*(r_mid(i)-r_p)/(rsun-r_p) ) &
-                    * (1.-dexp(-beta_1*theta_mid(j)**epsi))*(1.-dexp(beta_2*(theta_mid(j)-pi/2.))) &
-                    * dexp(-((r_mid(i)-r_0)/big_gamma)**2) / (r_mid(i)*dsin(theta_mid(j)))
+                    * (1.-dexp(-beta_1*theta_mid(j)**epsi)) * (1.-dexp(beta_2*(theta_mid(j)-pi/2.))) &
+                    * dexp(-((r_mid(i)-r_0)/big_gamma)**2) / (r_mid(i) * dsin(theta_mid(j)))
+                ! output
+                p = rsun*rmin_frac + float(i-1) / float(2*n) * rsun * (rmax_frac - rmin_frac)
+                q = pi*thetamax_frac * (1 - float(j-1) / float(2*n))
+                write(82, '(3(e15.9,1x))') q, p, psi_mid(i,j)
             enddo ! j
         enddo ! i
+        close(82)
       
         ! curl of the streamfunction
         do i=1,2*n+1
