@@ -85,19 +85,20 @@ contains
         double precision :: r_t_frac = 0.7, d_t_frac = 0.025
         double precision :: omega_rz = 2.719d-6, omega_eq = 2.895d-6
         double precision :: alpha_2 = -393.9, alpha_4 = -421.8
-        double precision :: omega_scz, r_t, d_t
+        double precision :: omega_scz, r_t, d_t, p, q
 
-        r_t=r_t_frac*rsun
-        d_t=d_t_frac*rsun
-
+        r_t = r_t_frac * rsun
+        d_t = d_t_frac * rsun
+ 
+        open(25, file=TRIM(ADJUSTL(data_dir))//"/diffrot.dat", action='write', status='replace')
         do i=0,n+1
-        do j=0,n+1
-
-            ! differential rotation
-            omega_scz = omega_eq + alpha_2*dcos(theta(j))**2 + alpha_4*dcos(theta(j))**4
-            omega(i,j) = omega_rz + 0.5*( 1. + erf( (r(i)-r_t)/d_t ) ) * (omega_scz - omega_rz)
-
-        enddo ! j
+            do j=0,n+1
+                p = rsun * (rmin_frac + float(i-1) / float(n) * (rmax_frac - rmin_frac))
+                q = pi * (1 - float(j-1) / float(n))
+                omega_scz = omega_eq + alpha_2*dcos(theta(j))**2 + alpha_4*dcos(theta(j))**4
+                omega(i,j) = omega_rz + 0.5*( 1. + erf( (r(i)-r_t)/d_t ) ) * (omega_scz - omega_rz)
+                write(25, '(3(e15.9,1x))') q, p, omega(i,j)
+            enddo ! j
         enddo ! i
 
     end subroutine define_dr
