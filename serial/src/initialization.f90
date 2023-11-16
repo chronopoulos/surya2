@@ -6,7 +6,7 @@ module initialization
     implicit none
     save
 
-        integer :: i, j, k, irow, icol, ir, ith, iter
+        integer :: i, j, irow, icol, ir, ith, iter
 
         ! coordinate stuff
         double precision :: rsun, pi, rmin_frac, rmax_frac, thetamin_frac, thetamax_frac
@@ -26,7 +26,7 @@ module initialization
 
         ! section 2.1 stuff
         double precision, allocatable :: psi_mid(:,:), v_r_mid(:,:), v_theta_mid(:,:)
-        double precision, allocatable :: omega(:,:)
+        double precision, allocatable :: omega(:,:), dror(:,:), drot(:,:)
         double precision, allocatable :: eta_a(:,:), eta_b(:,:)
 
         ! matrix coefficients
@@ -87,7 +87,7 @@ contains
 
         ! section 2.1
         allocate( psi_mid(0:2*n+2,0:2*n+2), v_r_mid(0:2*n+2,0:2*n+2), v_theta_mid(0:2*n+2,0:2*n+2) )
-        allocate( omega(0:n+1,0:n+1) )
+        allocate( omega(0:n+1,0:n+1), dror(0:n+1,0:n+1), drot(0:n+1,0:n+1) )
         allocate( eta_a(0:n+1,0:n+1), eta_b(0:n+1,0:n+1) )
 
         ! matrix coefficients
@@ -112,16 +112,16 @@ contains
         implicit none
 
         integer,intent(in) :: n
-        real(8),dimension(n),intent(in) :: a,b,c,v
-        real(8),dimension(n),intent(out) :: x
-        real(8),dimension(n) :: bp,vp
-        real(8) :: m
+        double precision,dimension(n),intent(in) :: a,b,c,v
+        double precision,dimension(n),intent(out) :: x
+        double precision,dimension(n) :: bp,vp
+        double precision :: m
         integer i
 
         ! Make copies of the b and v variables so that they are unaltered by this sub
 
-        bp(1) = b(1)
-        vp(1) = v(1)
+        bp(:) = b(:)
+        vp(:) = v(:)
 
         ! The first pass (setting coefficients)
 

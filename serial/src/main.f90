@@ -18,6 +18,10 @@ program main
     call define_alpha()
     call define_matrix_coefficients() ! sets to zero
 
+    ! check courant condition
+    print*, 'dr/dt = ', dr/dt
+    print*, 'dth*rmin/dt = ', dth*rmin/dt
+
     ! Main Loop
     t=0d0
     call initialize_fields()
@@ -26,6 +30,7 @@ program main
 
         call advance_interior_a()
         call advance_interior_b()
+        call set_boundary_conditions()
         t=t+dt
 
         ! output

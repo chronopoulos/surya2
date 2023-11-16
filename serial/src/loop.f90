@@ -43,7 +43,7 @@ contains
 
             ! compute RHS
             do i=1,n
-                rhs(i) = -da(j,i)*afield(j-1,i) + (1.-ea(j,i))*afield(j,i) - fa(j,i)*afield(j+1,i)
+                rhs(i) = -da(j,i)*afield(j-1,i) + (1.-ea(j,i))*afield(j,i) - fa(j,i)*afield(j+1,i) + alpha(j,i)*bfield(j,i)*dt/2.
             enddo ! i
 
             ! tridi solve
@@ -62,11 +62,11 @@ contains
 
             ! compute RHS
             do i=1,n
-                rhs(i) = -aa(i,j)*afield2(i,j-1) + (1.-ba(i,j))*afield2(i,j) - ca(i,j)*afield2(i,j+1)
+                rhs(i) = -aa(i,j)*afield2(i,j-1) + (1.-ba(i,j))*afield2(i,j) - ca(i,j)*afield2(i,j+1) + alpha(i,j)*bfield(i,j)*dt/2.
             enddo ! i
 
             ! tridi solve
-            subdiag = da(1:n,k)
+            subdiag = da(1:n,j)
             diag = 1 + ea(1:n,j)
             superdiag = fa(1:n,j)
             call solve_tridiag(subdiag,diag,superdiag,rhs,result,n)
@@ -78,6 +78,29 @@ contains
 
     end subroutine advance_interior_a
 
+    subroutine set_boundary_conditions()
+        ! bottom
+        do j=0,n+1
+            afield(0,j)=0.0d0
+            bfield(0,j)=0.0d0
+        end do
+        ! top
+            ! tmp
+            !do nup=1,11
+            !    do l=1,96
+            !        ss1(l)=ss1_p(l)*ss(n,dq)
+            !    end do
+            !    do j=0,n+1
+            !        call coeff(n,ss1,dq,j,cf)
+            !        afield(n+1,j) = afield(n,j) + cf*dp
+            !    end do
+            !end do
+        do j=0,n+1
+            bfield(n+1,j)= 0.
+            afield(n+1,j) = 0.  ! mp
+        end do
+    end subroutine set_boundary_conditions
+
 
     subroutine advance_interior_b()
         ! this is reversed relative to choudhuri eqns 33-40
@@ -86,12 +109,16 @@ contains
         ! eb <-> bb
         ! fb <-> cb
 
+        double precision :: br, bt
+
         ! first half-step
         do j=1,n
 
             ! compute RHS
             do i=1,n
-                rhs(i) = -db(j,i)*bfield(j-1,i) + (1.-eb(j,i))*bfield(j,i) - fb(j,i)*bfield(j+1,i)
+                br = (afield(j,i+1)*dsin(theta(i)+dth) - afield(j,i-1)*dsin(theta(i)-dth)) * dt/(4*dth)
+                bt = (afield(j-1,i)*(r(j)-dr) - afield(j+1,i)*(r(j)+dr)) * dsin(theta(i)) * dt/(4*r(j)*dr)
+                rhs(i) = -db(j,i)*bfield(j-1,i) + (1.-eb(j,i))*bfield(j,i) - fb(j,i)*bfield(j+1,i) + br*dror(j,i) + bt*drot(j,i)
             enddo ! i
 
             ! tridi solve
@@ -110,11 +137,13 @@ contains
 
             ! compute RHS
             do i=1,n
-                rhs(i) = -ab(i,j)*bfield2(i,j-1) + (1.-bb(i,j))*bfield2(i,j) - cb(i,j)*bfield2(i,j+1)
+                br = (afield(i,j+1)*dsin(theta(j)+dth) - afield(j,j-1)*dsin(theta(j)-dth)) * dt/(4*dth)
+                bt = (afield(i-1,j)*(r(i)-dr) - afield(i+1,j)*(r(i)+dr)) * dsin(theta(j)) * dt/(4*r(i)*dr)
+                rhs(i) = -ab(i,j)*bfield2(i,j-1) + (1.-bb(i,j))*bfield2(i,j) - cb(i,j)*bfield2(i,j+1) + br*dror(i,j) + bt*drot(i,j)
             enddo ! i
 
             ! tridi solve
-            subdiag = db(1:n,k)
+            subdiag = db(1:n,j)
             diag = 1 + eb(1:n,j)
             superdiag = fb(1:n,j)
             call solve_tridiag(subdiag,diag,superdiag,rhs,result,n)

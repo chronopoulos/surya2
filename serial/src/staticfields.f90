@@ -112,6 +112,14 @@ contains
             enddo ! j
         enddo ! i
 
+        ! compute gradients of differential rotation
+        do i=1,n
+            do j=1,n
+                dror(i,j) = (omega(i+1,j) - omega(i-1,j)) / (2.*dr)  
+                drot(i,j) = (omega(i,j+1) - omega(i,j-1)) / (2.*dth)
+            end do
+        end do
+
     end subroutine define_dr
 
 
@@ -172,6 +180,7 @@ contains
         do i=1,n
             imid=2*i
             do j=1,n
+
                 jmid=2*i
                 ! repeated definitions
 
