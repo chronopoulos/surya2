@@ -11,7 +11,7 @@ import os
 DATA_DIR = os.path.expanduser('~/data/surya2/serial')
 DATA_FILE = os.path.expanduser('diffrot.dat')
 
-N = 2 * 128 + 1
+N = 128 + 2
 RMIN = 0.382794500E+11
 RMAX = 0.695990000E+11
 
@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         t =     data[:,0]
         r =     data[:,1]
-        psi =   data[:,2]
+        omega =   data[:,2]
 
         x = r * np.sin(t)
         y = RMAX - r*np.cos(t)
@@ -31,10 +31,10 @@ class MainWindow(QtWidgets.QMainWindow):
         yf = np.linspace(0, 2*RMAX, 4*N)
         xxf, yyf = np.meshgrid(xf, yf, indexing='ij')
 
-        psi_rect = griddata((x, y), psi, (xxf, yyf), method='linear')
+        omega_rect = griddata((x, y), omega, (xxf, yyf), method='linear')
 
         self.imageView = pg.ImageView()
-        self.imageView.setImage(psi_rect)
+        self.imageView.setImage(omega_rect)
         self.setCentralWidget(self.imageView)
 
         self.resize(600, 800)
