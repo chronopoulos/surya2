@@ -15,6 +15,7 @@ program main
     call define_mc()
     call define_dr()
     call define_diffusivities()
+    call define_alpha()
     call define_matrix_coefficients() ! sets to zero
 
     ! Main Loop

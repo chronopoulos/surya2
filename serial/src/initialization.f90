@@ -22,6 +22,7 @@ module initialization
         double precision, allocatable :: r(:), r_mid(:), theta(:), theta_mid(:)
         double precision, allocatable :: afield(:,:), afield2(:,:)
         double precision, allocatable :: bfield(:,:), bfield2(:,:)
+        double precision, allocatable :: alpha(:,:)
 
         ! section 2.1 stuff
         double precision, allocatable :: psi_mid(:,:), v_r_mid(:,:), v_theta_mid(:,:)
@@ -79,6 +80,7 @@ contains
         allocate( r_mid(0:2*n+2), theta_mid(0:2*n+2) )
         allocate( afield(0:n+1,0:n+1), afield2(0:n+1,0:n+1) )
         allocate( bfield(0:n+1,0:n+1), bfield2(0:n+1,0:n+1) )
+        allocate( alpha(0:n+1,0:n+1) )
 
         ! tridi stuff
         allocate( subdiag(n), diag(n), superdiag(n), rhs(n), result(n) )

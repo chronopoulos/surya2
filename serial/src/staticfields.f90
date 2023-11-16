@@ -139,6 +139,20 @@ contains
 
     end subroutine define_diffusivities
 
+    ! Diffusivities
+    subroutine define_alpha()
+
+        implicit none
+        double precision :: alpha_0 = 2500.0
+
+        do i=0,n+1
+            do j=0,n+1
+                alpha(i,j) = 0.25 * alpha_0 * dcos(theta(j)) * (1. + erf((r(i)-0.95*rsun)/(0.025*rsun))) * (1. - erf((r(i) - rsun) / (0.025*rsun)))
+            enddo ! j
+        enddo ! i
+
+    end subroutine define_alpha
+
     ! Matrix Coefficients
     subroutine define_matrix_coefficients()
 
@@ -156,13 +170,9 @@ contains
         fa=0d0
 
         do i=1,n
-
             imid=2*i
-
             do j=1,n
-
                 jmid=2*i
-
                 ! repeated definitions
 
                 ur_ij = v_r_mid(imid,jmid)/r_mid(imid)
